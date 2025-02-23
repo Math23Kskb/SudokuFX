@@ -1,0 +1,57 @@
+/* General window styling */
+.root {
+    -fx-font-family: "Arial";
+    -fx-alignment: center;
+}
+
+/* Styling for buttons */
+.button {
+    -fx-font-size: 18px;
+    -fx-background-color: #2e8b57;
+    -fx-text-fill: white;
+    -fx-min-width: 50px;
+    -fx-min-height: 50px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-border-color: #2e8b57;
+}
+
+.button:hover {
+    -fx-background-color: #45a049;
+}
+
+/* Sudoku Grid */
+.grid-pane {
+    -fx-hgap: 2;
+    -fx-vgap: 2;
+    -fx-padding: 10px;
+    -fx-border-color: f3f3f3;
+    -fx-border-width: 10px;
+}
+
+/* Subgrid background colors */
+.subgrid-0, .subgrid-2, .subgrid-4, .subgrid-6, .subgrid-8 {
+    -fx-background-color: #ffff;
+}
+
+.subgrid-1, .subgrid-3, .subgrid-5, .subgrid-7 {
+    -fx-background-color: #8FE080;
+}
+
+/* Styling for each TextField */
+.text-field {
+    -fx-font-size: 18px;
+    -fx-alignment: center;
+    -fx-pref-width: 60px;
+    -fx-pref-height: 60px;
+    -fx-border-color: black;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+    -fx-effect: dropshadow( gaussian , rgba(0, 0, 0, 0.3) , 5, 0 , 0 , 2);
+
+}
+
+.text-field:disabled {
+    -fx-text-fill: black;
+    -fx-opacity: 1.0;
+}
