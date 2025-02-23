@@ -1,6 +1,8 @@
 package org.mck;
 
 import org.junit.jupiter.api.Test;
+import org.mck.model.SudokuBoard;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class SudokuBoardTest {

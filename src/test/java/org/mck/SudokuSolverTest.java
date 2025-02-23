@@ -1,6 +1,8 @@
 package org.mck;
 
 import org.junit.jupiter.api.Test;
+import org.mck.model.SudokuBoard;
+import org.mck.model.SudokuSolver;
 
 import java.util.HashSet;
 import java.util.Set;
