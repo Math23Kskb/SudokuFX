@@ -1,4 +1,4 @@
-package org.mck;
+package org.mck.model;
 
 public class SudokuSolver {
 

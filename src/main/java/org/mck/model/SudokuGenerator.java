@@ -1,4 +1,4 @@
-package org.mck;
+package org.mck.model;
 
 import java.util.Random;
 
