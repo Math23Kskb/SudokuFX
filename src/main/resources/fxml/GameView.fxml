@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.TextField?>
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Button?>
+<GridPane fx:id="boardGrid" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="580" minWidth="580" prefHeight="580.0" prefWidth="580.0"
+          xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="org.mck.controller.GameController" styleClass="grid-pane">
+
+    <!-- First row -->
+    <TextField fx:id="cell00" onAction="#handleCellInput" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+    <TextField fx:id="cell01" onAction="#handleCellInput" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+    <TextField fx:id="cell02" onAction="#handleCellInput" GridPane.rowIndex="0" GridPane.columnIndex="2" />
+    <TextField fx:id="cell03" onAction="#handleCellInput" GridPane.rowIndex="0" GridPane.columnIndex="3" />
+    <TextField fx:id="cell04" onAction="#handleCellInput" GridPane.rowIndex="0" GridPane.columnIndex="4" />
+    <TextField fx:id="cell05" onAction="#handleCellInput" GridPane.rowIndex="0" GridPane.columnIndex="5" />
+    <TextField fx:id="cell06" onAction="#handleCellInput" GridPane.rowIndex="0" GridPane.columnIndex="6" />
+    <TextField fx:id="cell07" onAction="#handleCellInput" GridPane.rowIndex="0" GridPane.columnIndex="7" />
+    <TextField fx:id="cell08" onAction="#handleCellInput" GridPane.rowIndex="0" GridPane.columnIndex="8" />
+
+    <!-- Second row -->
+    <TextField fx:id="cell10" onAction="#handleCellInput" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+    <TextField fx:id="cell11" onAction="#handleCellInput" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+    <TextField fx:id="cell12" onAction="#handleCellInput" GridPane.rowIndex="1" GridPane.columnIndex="2" />
+    <TextField fx:id="cell13" onAction="#handleCellInput" GridPane.rowIndex="1" GridPane.columnIndex="3" />
+    <TextField fx:id="cell14" onAction="#handleCellInput" GridPane.rowIndex="1" GridPane.columnIndex="4" />
+    <TextField fx:id="cell15" onAction="#handleCellInput" GridPane.rowIndex="1" GridPane.columnIndex="5" />
+    <TextField fx:id="cell16" onAction="#handleCellInput" GridPane.rowIndex="1" GridPane.columnIndex="6" />
+    <TextField fx:id="cell17" onAction="#handleCellInput" GridPane.rowIndex="1" GridPane.columnIndex="7" />
+    <TextField fx:id="cell18" onAction="#handleCellInput" GridPane.rowIndex="1" GridPane.columnIndex="8" />
+
+    <!-- Third row -->
+    <TextField fx:id="cell20" onAction="#handleCellInput" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+    <TextField fx:id="cell21" onAction="#handleCellInput" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+    <TextField fx:id="cell22" onAction="#handleCellInput" GridPane.rowIndex="2" GridPane.columnIndex="2" />
+    <TextField fx:id="cell23" onAction="#handleCellInput" GridPane.rowIndex="2" GridPane.columnIndex="3" />
+    <TextField fx:id="cell24" onAction="#handleCellInput" GridPane.rowIndex="2" GridPane.columnIndex="4" />
+    <TextField fx:id="cell25" onAction="#handleCellInput" GridPane.rowIndex="2" GridPane.columnIndex="5" />
+    <TextField fx:id="cell26" onAction="#handleCellInput" GridPane.rowIndex="2" GridPane.columnIndex="6" />
+    <TextField fx:id="cell27" onAction="#handleCellInput" GridPane.rowIndex="2" GridPane.columnIndex="7" />
+    <TextField fx:id="cell28" onAction="#handleCellInput" GridPane.rowIndex="2" GridPane.columnIndex="8" />
+
+    <!-- Fourth row -->
+    <TextField fx:id="cell30" onAction="#handleCellInput" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+    <TextField fx:id="cell31" onAction="#handleCellInput" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+    <TextField fx:id="cell32" onAction="#handleCellInput" GridPane.rowIndex="3" GridPane.columnIndex="2" />
+    <TextField fx:id="cell33" onAction="#handleCellInput" GridPane.rowIndex="3" GridPane.columnIndex="3" />
+    <TextField fx:id="cell34" onAction="#handleCellInput" GridPane.rowIndex="3" GridPane.columnIndex="4" />
+    <TextField fx:id="cell35" onAction="#handleCellInput" GridPane.rowIndex="3" GridPane.columnIndex="5" />
+    <TextField fx:id="cell36" onAction="#handleCellInput" GridPane.rowIndex="3" GridPane.columnIndex="6" />
+    <TextField fx:id="cell37" onAction="#handleCellInput" GridPane.rowIndex="3" GridPane.columnIndex="7" />
+    <TextField fx:id="cell38" onAction="#handleCellInput" GridPane.rowIndex="3" GridPane.columnIndex="8" />
+
+    <!-- Fifth row -->
+    <TextField fx:id="cell40" onAction="#handleCellInput" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+    <TextField fx:id="cell41" onAction="#handleCellInput" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+    <TextField fx:id="cell42" onAction="#handleCellInput" GridPane.rowIndex="4" GridPane.columnIndex="2" />
+    <TextField fx:id="cell43" onAction="#handleCellInput" GridPane.rowIndex="4" GridPane.columnIndex="3" />
+    <TextField fx:id="cell44" onAction="#handleCellInput" GridPane.rowIndex="4" GridPane.columnIndex="4" />
+    <TextField fx:id="cell45" onAction="#handleCellInput" GridPane.rowIndex="4" GridPane.columnIndex="5" />
+    <TextField fx:id="cell46" onAction="#handleCellInput" GridPane.rowIndex="4" GridPane.columnIndex="6" />
+    <TextField fx:id="cell47" onAction="#handleCellInput" GridPane.rowIndex="4" GridPane.columnIndex="7" />
+    <TextField fx:id="cell48" onAction="#handleCellInput" GridPane.rowIndex="4" GridPane.columnIndex="8" />
+
+    <!-- Sixth row -->
+    <TextField fx:id="cell50" onAction="#handleCellInput" GridPane.rowIndex="5" GridPane.columnIndex="0" />
+    <TextField fx:id="cell51" onAction="#handleCellInput" GridPane.rowIndex="5" GridPane.columnIndex="1" />
+    <TextField fx:id="cell52" onAction="#handleCellInput" GridPane.rowIndex="5" GridPane.columnIndex="2" />
+    <TextField fx:id="cell53" onAction="#handleCellInput" GridPane.rowIndex="5" GridPane.columnIndex="3" />
+    <TextField fx:id="cell54" onAction="#handleCellInput" GridPane.rowIndex="5" GridPane.columnIndex="4" />
+    <TextField fx:id="cell55" onAction="#handleCellInput" GridPane.rowIndex="5" GridPane.columnIndex="5" />
+    <TextField fx:id="cell56" onAction="#handleCellInput" GridPane.rowIndex="5" GridPane.columnIndex="6" />
+    <TextField fx:id="cell57" onAction="#handleCellInput" GridPane.rowIndex="5" GridPane.columnIndex="7" />
+    <TextField fx:id="cell58" onAction="#handleCellInput" GridPane.rowIndex="5" GridPane.columnIndex="8" />
+
+    <!-- Seventh row -->
+    <TextField fx:id="cell60" onAction="#handleCellInput" GridPane.rowIndex="6" GridPane.columnIndex="0" />
+    <TextField fx:id="cell61" onAction="#handleCellInput" GridPane.rowIndex="6" GridPane.columnIndex="1" />
+    <TextField fx:id="cell62" onAction="#handleCellInput" GridPane.rowIndex="6" GridPane.columnIndex="2" />
+    <TextField fx:id="cell63" onAction="#handleCellInput" GridPane.rowIndex="6" GridPane.columnIndex="3" />
+    <TextField fx:id="cell64" onAction="#handleCellInput" GridPane.rowIndex="6" GridPane.columnIndex="4" />
+    <TextField fx:id="cell65" onAction="#handleCellInput" GridPane.rowIndex="6" GridPane.columnIndex="5" />
+    <TextField fx:id="cell66" onAction="#handleCellInput" GridPane.rowIndex="6" GridPane.columnIndex="6" />
+    <TextField fx:id="cell67" onAction="#handleCellInput" GridPane.rowIndex="6" GridPane.columnIndex="7" />
+    <TextField fx:id="cell68" onAction="#handleCellInput" GridPane.rowIndex="6" GridPane.columnIndex="8" />
+
+    <!-- Eighth row -->
+    <TextField fx:id="cell70" onAction="#handleCellInput" GridPane.rowIndex="7" GridPane.columnIndex="0" />
+    <TextField fx:id="cell71" onAction="#handleCellInput" GridPane.rowIndex="7" GridPane.columnIndex="1" />
+    <TextField fx:id="cell72" onAction="#handleCellInput" GridPane.rowIndex="7" GridPane.columnIndex="2" />
+    <TextField fx:id="cell73" onAction="#handleCellInput" GridPane.rowIndex="7" GridPane.columnIndex="3" />
+    <TextField fx:id="cell74" onAction="#handleCellInput" GridPane.rowIndex="7" GridPane.columnIndex="4" />
+    <TextField fx:id="cell75" onAction="#handleCellInput" GridPane.rowIndex="7" GridPane.columnIndex="5" />
+    <TextField fx:id="cell76" onAction="#handleCellInput" GridPane.rowIndex="7" GridPane.columnIndex="6" />
+    <TextField fx:id="cell77" onAction="#handleCellInput" GridPane.rowIndex="7" GridPane.columnIndex="7" />
+    <TextField fx:id="cell78" onAction="#handleCellInput" GridPane.rowIndex="7" GridPane.columnIndex="8" />
+
+    <!-- Ninth row -->
+    <TextField fx:id="cell80" onAction="#handleCellInput" GridPane.rowIndex="8" GridPane.columnIndex="0" />
+    <TextField fx:id="cell81" onAction="#handleCellInput" GridPane.rowIndex="8" GridPane.columnIndex="1" />
+    <TextField fx:id="cell82" onAction="#handleCellInput" GridPane.rowIndex="8" GridPane.columnIndex="2" />
+    <TextField fx:id="cell83" onAction="#handleCellInput" GridPane.rowIndex="8" GridPane.columnIndex="3" />
+    <TextField fx:id="cell84" onAction="#handleCellInput" GridPane.rowIndex="8" GridPane.columnIndex="4" />
+    <TextField fx:id="cell85" onAction="#handleCellInput" GridPane.rowIndex="8" GridPane.columnIndex="5" />
+    <TextField fx:id="cell86" onAction="#handleCellInput" GridPane.rowIndex="8" GridPane.columnIndex="6" />
+    <TextField fx:id="cell87" onAction="#handleCellInput" GridPane.rowIndex="8" GridPane.columnIndex="7" />
+    <TextField fx:id="cell88" onAction="#handleCellInput" GridPane.rowIndex="8" GridPane.columnIndex="8" />
+
+    <HBox alignment="CENTER" spacing="10" GridPane.rowIndex="9" GridPane.columnSpan="9">
+        <Button fx:id="resetButton" text="Reset" onAction="#handleReset" styleClass="reset-button"/>
+    </HBox>
+
+</GridPane>
