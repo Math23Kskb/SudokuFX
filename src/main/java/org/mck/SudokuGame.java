@@ -1,5 +1,8 @@
 package org.mck;
 
+import org.mck.model.SudokuBoard;
+import org.mck.model.SudokuGenerator;
+
 import java.util.Scanner;
 
 public class SudokuGame {
