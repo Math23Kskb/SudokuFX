@@ -2,12 +2,12 @@ package org.mck.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class MenuController {
 
@@ -16,13 +16,13 @@ public class MenuController {
 
     @FXML
     public void startNewGame() throws IOException {
-        Stage stage = (Stage) startGameButton.getScene().getWindow();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/GameView.fxml"));
-        Parent gameRoot = loader.load();
+        Scene gameScene = new Scene(loader.load());
+        gameScene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
 
-        stage.setScene(new Scene(gameRoot));
-        stage.setTitle("Sudoku Game - Play");
+        Stage stage = (Stage) startGameButton.getScene().getWindow();
+        stage.setScene(gameScene);
         stage.show();
     }
 }
