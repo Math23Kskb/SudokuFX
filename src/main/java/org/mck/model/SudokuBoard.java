@@ -5,9 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.mck.util.BoardTemplate.BOARD_TEMPLATE;
 
-public class SudokuBoard {
+public class SudokuBoard implements Board{
 
     public static final int SIZE = 9;
     public static final int SUBGRID = 3;
@@ -31,6 +30,17 @@ public class SudokuBoard {
         }
     }
 
+    @Override
+    public int getSize() {
+        return SIZE;
+    }
+
+    @Override
+    public int getSubgridSize() {
+        return SUBGRID;
+    }
+
+    @Override
     public boolean isValidMove(int row, int col, int num) {
         int boxIndex = (row / SUBGRID) * SUBGRID + col / SUBGRID;
         return !rows.get(row).contains(num) &&
@@ -38,10 +48,12 @@ public class SudokuBoard {
                 !boxes.get(boxIndex).contains(num);
     }
 
+    @Override
     public int getValue(int row, int col) {
         return board[row][col];
     }
 
+    @Override
     public void setValue(int row, int col, int num) {
 
         int boxIndex = (row / SUBGRID) * SUBGRID + col / SUBGRID;
@@ -61,20 +73,21 @@ public class SudokuBoard {
         }
     }
 
+    @Override
     public boolean isCellEmpty(int row, int col) {
         return board[row][col] == 0;
     }
 
-    public void printBoard() {
-        String[] values = new String[81];
-        int index = 0;
-        for (int row = 0; row < 9; row++) {
-            for (int col = 0; col < 9; col++) {
-
-                values[index++] = (board[row][col] == 0) ? " " : String.format("%2d", board[row][col]);
+    @Override
+    public void resetBoard() {
+        for (int i = 0; i < SIZE; i++) {
+            rows.get(i).clear();
+            columns.get(i).clear();
+            boxes.get(i).clear();
+            for (int j = 0; j < SIZE; j++) {
+                board[i][j] = 0;
             }
         }
-        System.out.printf(BOARD_TEMPLATE, (Object[]) values);
     }
 
 }
