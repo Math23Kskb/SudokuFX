@@ -1,27 +1,29 @@
-package org.mck.model;
+package org.mck.solver;
 
-public class SudokuSolver {
+import org.mck.model.Board;
 
-    private final SudokuBoard board;
+public class SudokuSolver implements PuzzleSolver {
 
-    public SudokuSolver(SudokuBoard board) {
-        this.board = board;
+    private Board board;
+
+    public SudokuSolver() {
     }
 
-    public void solve() {
-        solveRecursive(0, 0);
+    @Override
+    public boolean solve(Board board) {
+        this.board = board;
+        return solveRecursive(0, 0);
     }
 
     private boolean solveRecursive(int row, int col) {
-        if (col == SudokuBoard.SIZE) {
+        if (col == board.getSize()) {
             col = 0;
             row++;
-            if (row == SudokuBoard.SIZE) return true;
+            if (row == board.getSize()) return true;
         }
-
         if (!board.isCellEmpty(row, col)) return solveRecursive(row, col + 1);
 
-        for (int num = 1; num <= SudokuBoard.SIZE; num++) {
+        for (int num = 1; num <= board.getSize(); num++) {
             if (board.isValidMove(row, col, num)) {
                 board.setValue(row, col, num);
                 if (solveRecursive(row, col + 1)) return true;
