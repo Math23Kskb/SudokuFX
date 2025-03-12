@@ -87,7 +87,7 @@ public class SudokuBoardView {
 
         cellField.setOnAction(actionEvent -> {
             try {
-                gameController.testGameOver(actionEvent);
+                gameController.GameOver(actionEvent);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
