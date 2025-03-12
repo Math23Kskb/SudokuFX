@@ -1,8 +1,9 @@
 package org.mck;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mck.model.SudokuBoard;
-import org.mck.model.SudokuSolver;
+import org.mck.solver.SudokuSolver;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,13 +12,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SudokuSolverTest {
 
+    private SudokuBoard board;
+    private SudokuSolver solver;
+
+    @BeforeEach
+    void setUp() {
+        board = new SudokuBoard();
+        solver = new SudokuSolver();
+    }
+
     @Test
     void testSolve() {
-        SudokuBoard board = new SudokuBoard();
-        SudokuSolver solver = new SudokuSolver(board);
-
         board.setValue(0, 0, 5);
-        solver.solve();
+        solver.solve(board);
 
 
         for (int row = 0; row < 9; row++) {
@@ -59,13 +66,11 @@ class SudokuSolverTest {
 
     @Test
     void testBackTrackingSolvesCorrectly() {
-        SudokuBoard board = new SudokuBoard();
         board.setValue(0,0,5);
         board.setValue(0,1,3);
         board.setValue(1,0,6);
 
-        SudokuSolver solver = new SudokuSolver(board);
-        solver.solve();
+        solver.solve(board);
 
     }
 }
