@@ -17,6 +17,20 @@ public class SudokuBoard implements Board{
 
     private final int[][] board;
 
+
+    public boolean isNumberInRow(int row, int num) {
+        return rows.get(row).contains(num);
+    }
+
+    public boolean isNumberInColumn(int col, int num) {
+        return columns.get(col).contains(num);
+    }
+
+    public boolean isNumberInBox(int row, int col, int num) {
+        int boxIndex = (row / SUBGRID) * SUBGRID + col / SUBGRID;
+        return boxes.get(boxIndex).contains(num);
+    }
+
     public SudokuBoard() {
         board = new int[SIZE][SIZE];
         rows = new ArrayList<>();
@@ -78,16 +92,34 @@ public class SudokuBoard implements Board{
         return board[row][col] == 0;
     }
 
-    @Override
-    public void resetBoard() {
-        for (int i = 0; i < SIZE; i++) {
-            rows.get(i).clear();
-            columns.get(i).clear();
-            boxes.get(i).clear();
-            for (int j = 0; j < SIZE; j++) {
-                board[i][j] = 0;
+    public boolean isBoardComplete() {
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+                if (board[row][col] == 0) {
+                    System.out.println("Board is NOT complete - empty cell at row " + row + ", col " + col); // ADD THIS LINE
+                    return false;
+                }
+                int num = board[row][col];
+
+                rows.get(row).remove(num);
+                columns.get(col).remove(num);
+                boxes.get((row / SUBGRID) * SUBGRID + col / SUBGRID).remove(num);
+
+                if (!isValidMove(row, col, num)) {
+
+                    rows.get(row).add(num);
+                    columns.get(col).add(num);
+                    boxes.get((row / SUBGRID) * SUBGRID + col / SUBGRID).add(num);
+                    System.out.println("Board is NOT complete - invalid move at row " + row + ", col " + col + ", num " + num); // ADD THIS LINE
+                    return false;
+                }
+
+                rows.get(row).add(num);
+                columns.get(col).add(num);
+                boxes.get((row / SUBGRID) * SUBGRID + col / SUBGRID).add(num);
             }
         }
+        return true;
     }
 
 }
