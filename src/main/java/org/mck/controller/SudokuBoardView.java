@@ -1,8 +1,12 @@
 package org.mck.controller;
 
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.GridPane;
+import javafx.util.converter.IntegerStringConverter;
 import org.mck.model.Board;
+
+import java.io.IOException;
 
 import static org.mck.model.SudokuBoard.SUBGRID;
 
@@ -46,7 +50,48 @@ public class SudokuBoardView {
         populateCell(cellField, row, col);
         cellField.applyCss();
 
-        cellField.setOnAction(gameController::handleCellInput); // Delegate event handling back to controller
+        TextFormatter<Integer> textFormatter = new TextFormatter<>(new IntegerStringConverter(), null, change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("[0-9]?")) {
+                if (newText.isEmpty() || (newText.equals("0") && change.isDeleted())) { //allow to delete 0 from existing number
+                    return change;
+                } else if (newText.matches("[1-9]")) {
+                    return change;
+                }
+            }
+            return null;
+        });
+        cellField.setTextFormatter(textFormatter);
+
+
+        cellField.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            if (!cellField.isFocused()) return;
+
+            if (newValue.isEmpty()) {
+                board.setValue(row, col, 0);
+                updateBoardDisplay();
+                return;
+            }
+
+            int userValue = Integer.parseInt(newValue);
+
+            if (gameController.isValidSudokuMove(row, col, userValue)) {
+                board.setValue(row, col, userValue);
+                updateBoardDisplay();
+            } else {
+                gameController.showInvalidMoveAlert(userValue, row, col);
+                cellField.setText(oldValue);
+            }
+        });
+
+        cellField.setOnAction(actionEvent -> {
+            try {
+                gameController.testGameOver(actionEvent);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         return cellField;
     }
