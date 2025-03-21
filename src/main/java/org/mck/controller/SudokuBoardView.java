@@ -50,40 +50,14 @@ public class SudokuBoardView {
         populateCell(cellField, row, col);
         cellField.applyCss();
 
-        TextFormatter<Integer> textFormatter = new TextFormatter<>(new IntegerStringConverter(), null, change -> {
-            String newText = change.getControlNewText();
-            if (newText.matches("[0-9]?")) {
-                if (newText.isEmpty() || (newText.equals("0") && change.isDeleted())) { //allow to delete 0 from existing number
-                    return change;
-                } else if (newText.matches("[1-9]")) {
-                    return change;
-                }
-            }
-            return null;
-        });
+        TextFormatter<Integer> textFormatter = createTextFormatter();
+
         cellField.setTextFormatter(textFormatter);
 
 
         cellField.textProperty().addListener((observable, oldValue, newValue) -> {
-
-            if (!cellField.isFocused()) return;
-
-            if (newValue.isEmpty()) {
-                board.setValue(row, col, 0);
-                updateBoardDisplay();
-                return;
-            }
-
-            int userValue = Integer.parseInt(newValue);
-
-            if (gameController.isValidSudokuMove(row, col, userValue)) {
-                board.setValue(row, col, userValue);
-                updateBoardDisplay();
-            } else {
-                gameController.showInvalidMoveAlert(userValue, row, col);
-                cellField.setText(oldValue);
-            }
-        });
+            handleCellInput(cellField, row, col, oldValue, newValue);
+            });
 
         cellField.setOnAction(actionEvent -> {
             try {
@@ -94,6 +68,41 @@ public class SudokuBoardView {
         });
 
         return cellField;
+    }
+
+    private TextFormatter<Integer> createTextFormatter() {
+        return new TextFormatter<>(new IntegerStringConverter(), null, change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("[0-9]?")) {
+                if (newText.isEmpty() || (newText.equals("0") && change.isDeleted())) {
+                    return change;
+                } else if (newText.matches("[1-9]")) {
+                    return change;
+                }
+            }
+            return null;
+        });
+    }
+
+    private void handleCellInput(TextField cellField, int row, int col, String oldValue,String newValue) {
+        if (!cellField.isFocused()) return;
+
+        if (newValue.isEmpty()) {
+            board.setValue(row, col, 0);
+            updateBoardDisplay();
+            return;
+        }
+
+        int userValue = Integer.parseInt(newValue);
+
+        if (gameController.isValidSudokuMove(row, col, userValue)) {
+            board.setValue(row, col, userValue);
+            updateBoardDisplay();
+        } else {
+            gameController.showInvalidMoveAlert(userValue, row, col);
+            cellField.setText(oldValue);
+        }
+
     }
 
     private int getSubgridIndex(int row, int col) {

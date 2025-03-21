@@ -18,6 +18,8 @@ public class GameController {
     private final Board board;
     private final BoardGenerator boardGenerator;
     private SudokuBoardView boardView;
+    private Stage gameOverStage;
+    private FXMLLoader fxmlLoader;
 
     public GameController(Board board, BoardGenerator boardGenerator) {
         this.board = board;
@@ -28,6 +30,22 @@ public class GameController {
         this.boardView = boardView;
 
         initializeGame();
+    }
+
+    public void setStageForGameOver(Stage stage) {
+        this.gameOverStage = stage;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public SudokuBoardView getBoardView() {
+        return boardView;
+    }
+
+    public void setFxmlLoader(FXMLLoader fxmlLoader) {
+        this.fxmlLoader = fxmlLoader;
     }
 
     @FXML
@@ -70,13 +88,13 @@ public class GameController {
         }
     }
 
-    private void showGameOverWindow(ActionEvent event) throws IOException {
-        FXMLLoader gameOverLoader = new FXMLLoader(getClass().getResource("/fxml/GameOverView.fxml"));
+    void showGameOverWindow(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/GameOverView.fxml"));
         Stage gameOverStage = new Stage();
-        Scene gameOverScene = new Scene(gameOverLoader.load());
+        Scene gameOverScene = new Scene(loader.load());
         gameOverScene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
 
-        GameOverController gameOverController = gameOverLoader.getController();
+        GameOverController gameOverController = loader.getController();
         gameOverController.setGameController(this); // Pass GameController instance
 
         gameOverStage.setTitle("Congratulations!");
@@ -85,8 +103,4 @@ public class GameController {
         gameOverStage.show();
     }
 
-    public void resetGame() {
-        boardGenerator.generateBoard(board);
-        boardView.initializeBoardDisplay();
-    }
 }

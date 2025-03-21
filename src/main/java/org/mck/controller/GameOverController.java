@@ -17,10 +17,14 @@ public class GameOverController {
         this.gameController = gameController;
     }
 
+    public GameController getGameController() {
+        return gameController;
+    }
+
     @FXML
     public void startNewGameButtonClicked(ActionEvent event) throws IOException {
         if (gameController != null) {
-            gameController.resetGame();
+            return;
         }
 
         Stage gameOverStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
