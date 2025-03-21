@@ -25,8 +25,9 @@ class SudokuGeneratorTest {
     }
 
     @Test
-    void testGenerateBoard() {
+    void generateBoard_GeneratesBoardWithFilledCells() {
         generator.generateBoard(board);
+
         int filledCells = 0;
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
