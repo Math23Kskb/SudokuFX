@@ -2,6 +2,7 @@ package org.mck;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mck.model.Board;
 import org.mck.model.SudokuBoard;
 import org.mck.solver.SudokuSolver;
 
@@ -25,7 +26,23 @@ class SudokuSolverTest {
     void testSolve() {
         board.setValue(0, 0, 5);
         solver.solve(board);
+        assertBoardIsSolvedAndValid(board);
 
+    }
+
+    @Test
+    void solve_WithInitialValues_SolvesBoardUsingBacktracking() {
+        board.setValue(0,0,5);
+        board.setValue(0,1,3);
+        board.setValue(1,0,6);
+
+        solver.solve(board);
+        assertBoardIsSolvedAndValid(board);
+
+    }
+
+    private void assertBoardIsSolvedAndValid(Board board) {
+        assertTrue(board.isBoardComplete(), "Board should be complete after solving");
 
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
@@ -34,43 +51,29 @@ class SudokuSolverTest {
             }
         }
 
-
         for (int row = 0; row < 9; row++) {
-            Set<Integer> seen = new HashSet<>();
+            Set<Integer> rowValues = new HashSet<>();
             for (int col = 0; col < 9; col++) {
-                assertTrue(seen.add(board.getValue(row, col)), "Duplicate in row " + row);
+                assertTrue(rowValues.add(board.getValue(row, col)), "Duplicate in row " + row);
             }
         }
-
 
         for (int col = 0; col < 9; col++) {
-            Set<Integer> seen = new HashSet<>();
+            Set<Integer> colValues = new HashSet<>();
             for (int row = 0; row < 9; row++) {
-                assertTrue(seen.add(board.getValue(row, col)), "Duplicate in column " + col);
+                assertTrue(colValues.add(board.getValue(row, col)), "Duplicate in column " + col);
             }
         }
-
 
         for (int boxRow = 0; boxRow < 3; boxRow++) {
             for (int boxCol = 0; boxCol < 3; boxCol++) {
-                Set<Integer> seen = new HashSet<>();
+                Set<Integer> boxValues = new HashSet<>();
                 for (int row = boxRow * 3; row < boxRow * 3 + 3; row++) {
                     for (int col = boxCol * 3; col < boxCol * 3 + 3; col++) {
-                        assertTrue(seen.add(board.getValue(row, col)), "Duplicate in 3x3 box at (" + boxRow + "," + boxCol + ")");
+                        assertTrue(boxValues.add(board.getValue(row, col)), "Duplicate in 3x3 box at (" + boxRow + "," + boxCol + ")");
                     }
                 }
             }
         }
-    }
-
-
-    @Test
-    void testBackTrackingSolvesCorrectly() {
-        board.setValue(0,0,5);
-        board.setValue(0,1,3);
-        board.setValue(1,0,6);
-
-        solver.solve(board);
-
     }
 }
