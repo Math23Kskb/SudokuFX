@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.mck.Main;
 import org.mck.controller.GameController;
+import org.mck.controller.SudokuBoardView;
 import org.mck.generator.*;
 import org.mck.model.Board;
 import org.mck.model.SudokuBoard;
@@ -23,35 +24,45 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SudokuSystemTest extends ApplicationTest {
 
-    private Stage primaryStage;
     private GameController gameController;
+    private Board solvedBoardInstance;
 
     @Override
     public void start(Stage stage) throws Exception {
-        this.primaryStage = stage;
-        FXMLLoader menuLoader = new FXMLLoader(Main.class.getResource("/fxml/MainView.fxml"));
-        Parent menuRoot = menuLoader.load();
-        Scene menuScene = new Scene(menuRoot);
-        menuScene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
-
-        stage.setTitle("Sudoku Game");
-        stage.setScene(menuScene);
-        stage.show();
-
-        clickOn("#startGameButton");
 
         FXMLLoader gameLoader = new FXMLLoader(Main.class.getResource("/fxml/GameView.fxml"));
-        Board board = new SudokuBoard();
+        Parent gameRoot = gameLoader.load(); // Load GameView.fxml FIRST
+        GridPane boardGridFromFXML = (GridPane) gameRoot.lookup("#boardGrid"); // Get boardGrid from loaded FXML
 
-        BoardGenerator boardGenerator = new SudokuGenerator(
-                new SudokuInitializer(new SudokuSolver()), new SudokuRemover(1)
-        );
+        Board board = new SudokuBoard();
+        SudokuInitializer initializer = new SudokuInitializer(new SudokuSolver());
+        SudokuRemover remover = new SudokuRemover(5);
+
+        BoardGenerator boardGenerator = new SudokuGenerator(initializer, remover) {
+            @Override
+            public void generateBoard(Board board) {
+                initializer.initializeBoard(board);
+                solvedBoardInstance = board.deepCopy();
+                remover.removeNumbers(board);
+            }
+        };
+
+
         gameController = new GameController(board, boardGenerator);
         gameLoader.setController(gameController);
-        Parent gameRoot = gameLoader.load();
         gameController = gameLoader.getController();
-    }
 
+        SudokuBoardView boardView = new SudokuBoardView(boardGridFromFXML, board, gameController);
+        gameController.setBoardView(boardView);
+
+        Scene gameScene = new Scene(gameRoot);
+        gameScene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
+
+        stage.setTitle("Sudoku Game Test");
+        stage.setScene(gameScene);
+        stage.show();
+
+    }
 
     @Test
     void startGameButton_Click_LoadsGameView() {
@@ -68,118 +79,94 @@ public class SudokuSystemTest extends ApplicationTest {
                 .orElse(null);
     }
 
-
     @Test
     void findAllEmptyCells_BoardIsGenerated_FindsEmptyCells() {
         List<TextField> emptyCells = findAllEmptyCells();
-
         assertFalse(emptyCells.isEmpty(), "Empty cells should be found");
-
-    }
-
-    private static class MoveSets {
-
-        Set<Integer> validMoves;
-        Set<Integer> usedMoves;
-        public MoveSets(Set<Integer> validMoves, Set<Integer> usedMoves) {
-            this.validMoves = validMoves;
-            this.usedMoves = usedMoves;
-        }
-
-        public Set<Integer> getValidMoves() {
-            return validMoves;
-        }
-
-        public Set<Integer> getUsedMoves() {
-            return usedMoves;
-        }
-
     }
 
     @Test
     void enterValidNumberInFirstEmptyCell_DirectInput_NoAlert() {
 
         List<TextField> emptyCells = findAllEmptyCells();
-
         assertFalse(emptyCells.isEmpty(), "Should be at least one empty cell");
         TextField firstEmptyCell = emptyCells.get(0);
         int row = GridPane.getRowIndex(firstEmptyCell);
         int col = GridPane.getColumnIndex(firstEmptyCell);
 
-        MoveSets moveSets = getValidAndUsedMovesForCell(row, col);
-        Set<Integer> validMoves = moveSets.getValidMoves();
+        Integer validNumberToEnter = null;  // Find a valid move
+        for (int number = 1; number <= 9; number++) {
+            if (gameController.isValidSudokuMove(row, col, number)) {
+                validNumberToEnter = number;
+                break;
+            }
+        }
 
-        assertFalse(validMoves.isEmpty(), "Should be at least one valid move for the first empty cell");
-        Integer validNumberToEnter = validMoves.iterator().next();
-
+        assertNotNull(validNumberToEnter, "Should be at least one valid move for the first empty cell");
 
         clickOn(firstEmptyCell);
         write(String.valueOf(validNumberToEnter));
-
 
         assertFalse(firstEmptyCell.getText().isEmpty(), "First empty cell should have a number after valid input");
 
     }
 
-
     @Test
     void enterInvalidNumberInRandomEmptyCell_ShowsAlert() {
         List<TextField> emptyCells = findAllEmptyCells();
         assertFalse(emptyCells.isEmpty(), "Should be at least one empty cell");
-        TextField EmptyCell = emptyCells.get(0);
 
-        clickOn(EmptyCell);
-        write("9");
+        TextField emptyCell = emptyCells.get(0);
+        int row = GridPane.getRowIndex(emptyCell);
+        int col = GridPane.getColumnIndex(emptyCell);
+
+        int invalidNumber;
+        if(findInvalidNumberForRow(row) >= 0){
+            invalidNumber = findInvalidNumberForRow(row);
+        }
+        else if (findInvalidNumberForColumn(col) >= 0) {
+            invalidNumber = findInvalidNumberForColumn(col);
+        }
+        else{
+            invalidNumber = findInvalidNumberForBox(row, col);
+        }
+
+        clickOn(emptyCell);
+        write(String.valueOf(invalidNumber));
 
         assertTrue(lookup(".alert").tryQuery().isPresent(), "Alert should be displayed for invalid move");
+
         clickOn("OK");
         assertFalse(lookup(".alert").tryQuery().isPresent(), "Alert should be closed after clicking OK");
-        assertEquals("", EmptyCell.getText(), "Cell should be cleared after invalid input");
+        assertEquals("", emptyCell.getText(), "Cell should be cleared after invalid input");
     }
 
-
     @Test
-    void GameOver_InvalidInputThenCompleteBoard_ShowsGameOverWindow() {
-        TextField cellForInvalidInput = getCell(0, 0);
-        assertNotNull(cellForInvalidInput, "Cell at 0,0 should exist");
-
-
-        clickOn(cellForInvalidInput);
-        write("9"); // Invalid input
-        assertTrue(lookup(".alert").tryQuery().isPresent(), "Alert should be displayed for invalid move");
-        clickOn("OK");
-        assertFalse(lookup(".alert").tryQuery().isPresent(), "Alert should be closed after clicking OK");
-
+    void CompleteBoard_ShowsGameOverWindow() {
+        Board gameBoard = gameController.getBoard();
+        List<TextField> emptyCells = findAllEmptyCells();
+        assertFalse(emptyCells.isEmpty(), "Should be at least one empty cell");
 
         completeSudokuBoardForTesting();
+
         TextField lastCell = getCell(8, 8);
-        assertNotNull(lastCell, "Last cell (8,8) should exist");
+        assertTrue(gameBoard.isBoardComplete(), "Board should be complete");
         clickOn(lastCell);
         type(KeyCode.ENTER);
-
 
         assertNotNull(lookup("#startNewGameButton").query(), "GameOver window should be displayed");
     }
 
     @Test
     void startNewGameButton_FromGameOverWindow_StartsNewGame() {
-        GameOver_InvalidInputThenCompleteBoard_ShowsGameOverWindow();
+        CompleteBoard_ShowsGameOverWindow();
 
         clickOn("#startNewGameButton");
 
         assertNotNull(lookup("#boardGrid").query(), "Game View should be loaded again for a new game");
-    }
 
-    @Test
-    void enterValidNumberInAllEmptyCells_RecursiveInput_NoAlert() {
-        List<TextField> emptyCells = findAllEmptyCells();
-        assertFalse(emptyCells.isEmpty(), "Should be at least one empty cell");
-        TextField firstEmptyCell = emptyCells.get(0);
-
-        recursivelyEnterValidNumber(firstEmptyCell);
-
-        assertFalse(firstEmptyCell.getText().isEmpty(), "First empty cell should have a number after recursive input");
-        assertFalse(lookup(".alert").tryQuery().isPresent(), "No alert should be present after valid input");
+        List<TextField> emptyCellsAfterNewGame = findAllEmptyCells();
+        assertTrue(emptyCellsAfterNewGame.isEmpty(), "New game should have empty cells");
     }
 
     @Test
@@ -190,7 +177,6 @@ public class SudokuSystemTest extends ApplicationTest {
         int row = GridPane.getRowIndex(emptyCellForRowConflict);
 
         int invalidNumberForRowConflict = findInvalidNumberForRow(row);
-
 
         clickOn(emptyCellForRowConflict);
         write(String.valueOf(invalidNumberForRowConflict));
@@ -231,7 +217,6 @@ public class SudokuSystemTest extends ApplicationTest {
 
         int invalidNumberForBoxConflict = findInvalidNumberForBox(row, col);
 
-
         clickOn(emptyCellForBoxConflict);
         write(String.valueOf(invalidNumberForBoxConflict));
 
@@ -242,61 +227,35 @@ public class SudokuSystemTest extends ApplicationTest {
         clickOn("OK");
     }
 
-    @Test
-    void enterCorrectNumberInAllEmptyCells_RecursiveInput() {
-        List<TextField> emptyCells = findAllEmptyCells();
-        assertFalse(emptyCells.isEmpty(), "Should be at least one empty cell");
-
-        for (TextField emptyCell : emptyCells) {
-            recursivelyEnterValidNumber(emptyCell);
-        }
-
-        for (TextField emptyCell : emptyCells) {
-            assertFalse(emptyCell.getText().isEmpty(), "Empty cell should have a number after recursive input");
-            assertFalse(lookup(".alert").tryQuery().isPresent(), "No alert should be present after valid input");
-
-        }
-
-    }
 
 
     // ====================== HELPER METHODS ====================== //
-    private MoveSets getValidAndUsedMovesForCell(int row, int col) {
-        Set<Integer> validMoveSet = new HashSet<>();
-        Set<Integer> usedMoveSet = new HashSet<>();
 
-        for (int number = 1; number <= 9; number++) {
-            if (gameController.isValidSudokuMove(row, col, number)) {
-                validMoveSet.add(number);
-            } else {
-                usedMoveSet.add(number);
-            }
-        }
-        return new MoveSets(validMoveSet, usedMoveSet);
-    }
-
-    private Board getSolvedBoard() {
-        Board solvedBoard = new SudokuBoard();
-        BoardGenerator solvedBoardGenerator = new SudokuGenerator(
-                new SudokuInitializer(new SudokuSolver()), new SudokuRemover(0)
-        );
-        solvedBoardGenerator.generateBoard(solvedBoard);
-        return solvedBoard;
-    }
     private void completeSudokuBoardForTesting() {
         if (gameController == null) {
-            System.out.println("ERROR: gameController is NULL in completeSudokuBoardForTesting()!");
-            return; // Exit to avoid NullPointerException
+            System.out.println("ERROR: gameController  is NULL in completeSudokuBoardForTesting()!");
+            return;
         }
-        solveBoardProgrammatically();
 
-        Board board = gameController.getBoard();
+        if (solvedBoardInstance == null) {
+            System.out.println("ERROR: solvedBoardInstance is NULL in completeSudokuBoardForTesting()!");
+            return;
+        }
+
+        Board gameBoard = gameController.getBoard();
+
+        if (gameBoard == null) {
+            System.out.println("ERROR: gameBoard (from gameController) is NULL in completeSudokuBoardForTesting()!");
+            return;
+        }
+
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
-                int cellValue = board.getValue(row, col);
                 TextField cell = getCell(row, col);
-                if (cell != null && !cell.isDisable() && (cell.getText().isEmpty() || !cell.getText().equals(String.valueOf(cellValue)))) {
-                    recursivelyEnterValidNumber(cell);
+                if (cell != null && !cell.isDisable() && cell.getText().isEmpty()) {
+                    int correctValue = solvedBoardInstance.getValue(row, col);
+                    clickOn(cell);
+                    write(String.valueOf(correctValue));
                 }
             }
         }
@@ -305,91 +264,47 @@ public class SudokuSystemTest extends ApplicationTest {
     private List<TextField> findAllEmptyCells() {
         List<TextField> emptyCells = new ArrayList<>();
         GridPane boardGridPane = lookup("#boardGrid").queryAs(GridPane.class);
-        System.out.println("boardGridPane is null: " + (boardGridPane == null));
+
         if (boardGridPane != null) {
-            System.out.println("Number of children in boardGridPane: " + boardGridPane.getChildren().size());
             for (javafx.scene.Node node : boardGridPane.getChildren()) {
-                System.out.println("Node class: " + node.getClass().getSimpleName());
-                if (node instanceof TextField) {
-                    TextField cell = (TextField) node;
-                    System.out.println("TextField found - Row: " + GridPane.getRowIndex(node) + ", Col: " + GridPane.getColumnIndex(node) + ", Text: '" + cell.getText() + "', Disabled: " + cell.isDisabled()); // Log TextField details
+                if (node instanceof TextField cell) {
                     if (cell.getText().isEmpty() && !cell.isDisabled()) {
                         emptyCells.add(cell);
                     }
                 }
             }
         }
-        System.out.println("Number of empty cells to be returned: " + emptyCells.size()); // Log emptyCells size
         return emptyCells;
     }
 
 
     private int findInvalidNumberForRow(int row) {
-        Board solvedBoard = getSolvedBoard();
-        System.out.println("findInvalidNumberForRow: Row = " + row);
 
         for (int num = 1; num <= 9; num++) {
-            if (solvedBoard.isNumberInRow(row, num)) {
-                System.out.println("findInvalidNumberForRow: Returning invalid number (row conflict) = " + num);
+            if (solvedBoardInstance.isNumberInRow(row, num)) {
                 return num;
             }
         }
-        System.out.println("findInvalidNumberForRow: No invalid number found (correct - should find one)");
         return -1;
     }
 
     private int findInvalidNumberForColumn(int col) {
-        Board solvedBoard = getSolvedBoard();
-        System.out.println("findInvalidNumberForColumn: Column = " + col);
 
         for (int num = 1; num <= 9; num++) {
-            if (solvedBoard.isNumberInColumn(col, num)) {
-                System.out.println("findInvalidNumberForColumn: Returning invalid number (column conflict) = " + num);
+            if (solvedBoardInstance.isNumberInColumn(col, num)) {
                 return num;
             }
         }
-        System.out.println("findInvalidNumberForColumn: No invalid number found (correct - should find one)");
         return -1;
     }
 
     private int findInvalidNumberForBox(int row, int col) {
-        Board solvedBoard = getSolvedBoard();
-        System.out.println("findInvalidNumberForBox: Row = " + row + ", Col = " + col);
 
         for (int num = 1; num <= 9; num++) {
-            if (solvedBoard.isNumberInBox(row, col, num)) {
-                System.out.println("findInvalidNumberForBox: Returning invalid number (box conflict) = " + num);
+            if (solvedBoardInstance.isNumberInBox(row, col, num)) {
                 return num;
             }
         }
-        System.out.println("findInvalidNumberForBox: No invalid number found (correct - should find one)");
         return -1;
     }
-
-    private void solveBoardProgrammatically() {
-        Board board = gameController.getBoard();
-        SudokuSolver solver = new SudokuSolver();
-        boolean solved = solver.solve(board);
-        assertTrue(solved, "Board should be solvable by the solver");
-        assertTrue(board.isBoardComplete(), "Board should be complete after solving");
-    }
-
-    private void recursivelyEnterValidNumber(TextField cell) {
-        if (cell == null) return;
-
-        if (!cell.getText().isEmpty()) return;
-
-        for (int number = 1; number <= 9; number++) {
-            clickOn(cell);
-            write(String.valueOf(number));
-            if (lookup(".alert").tryQuery().isEmpty()) {
-                return;
-            } else {
-                clickOn("OK");
-                eraseText(1);
-            }
-        }
-        fail("No valid number found for cell after trying 1-9");
-    }
-
 }

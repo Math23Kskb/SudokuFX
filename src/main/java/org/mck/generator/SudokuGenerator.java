@@ -14,6 +14,9 @@ public class SudokuGenerator implements BoardGenerator {
     @Override
     public void generateBoard(Board board) {
         initializer.initializeBoard(board);
+
+        board.deepCopy();
+
         remover.removeNumbers(board);
     }
 }

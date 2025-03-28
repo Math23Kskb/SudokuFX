@@ -13,4 +13,6 @@ public interface Board {
     boolean isNumberInBox(int row, int col, int num);
 
     boolean isBoardComplete();
+
+    Board deepCopy();
 }

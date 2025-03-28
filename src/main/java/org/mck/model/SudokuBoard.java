@@ -92,6 +92,17 @@ public class SudokuBoard implements Board{
         return board[row][col] == 0;
     }
 
+    @Override
+    public Board deepCopy() {
+        SudokuBoard solvedBoardCopy = new SudokuBoard();
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                solvedBoardCopy.setValue(i, j, this.board[i][j]);
+            }
+        }
+        return solvedBoardCopy;
+    }
+
     public boolean isBoardComplete() {
         for (int row = 0; row < SIZE; row++) {
             for (int col = 0; col < SIZE; col++) {
