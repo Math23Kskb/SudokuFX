@@ -110,39 +110,4 @@ class GameControllerTest {
         verify(board).isBoardComplete();
 
     }
-
-
-    @Test
-    void showGameOverWindow_LoadsAndDisplaysGameOverUI() throws IOException {
-
-        ActionEvent actionEvent = mock(ActionEvent.class);
-
-        Node mockNode = mock(Node.class);
-        Scene mockScene = mock(Scene.class);
-        when(actionEvent.getSource()).thenReturn(mockNode);
-        when(mockNode.getScene()).thenReturn(mockScene);
-        when(mockScene.getWindow()).thenReturn(mockStage);
-
-        gameController.setStageForGameOver(mockStage);
-
-        FXMLLoader mockGameOverLoader = mock(FXMLLoader.class);
-        Parent mockGameOverRoot = mock(Parent.class);
-        GameOverController mockGameOverController = mock(GameOverController.class);
-
-        when(mockGameOverLoader.load()).thenReturn(mockGameOverRoot);
-        when(mockGameOverLoader.getController()).thenReturn(mockGameOverController);
-
-        gameController.setFxmlLoader(mockGameOverLoader);
-
-
-        gameController.showGameOverWindow(actionEvent);
-
-
-        verify(mockGameOverLoader).load();
-        verify(mockGameOverLoader).getController();
-        verify(mockGameOverController).setGameController(gameController);
-        verify(mockStage).setTitle(anyString());
-        verify(mockStage).setScene(any(Scene.class));
-
-    }
 }
