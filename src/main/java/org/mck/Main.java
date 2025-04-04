@@ -15,14 +15,14 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-            FXMLLoader menuLoader = new FXMLLoader(Main.class.getResource("/fxml/MainView.fxml"));
-            VBox menuRoot = menuLoader.load();
-            Scene menuScene = new Scene(menuRoot);
-            menuScene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
+        FXMLLoader menuLoader = new FXMLLoader(Main.class.getResource("/fxml/MainView.fxml"));
+        VBox menuRoot = menuLoader.load();
+        Scene menuScene = new Scene(menuRoot);
+        menuScene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
 
-            primaryStage.setTitle("Sudoku Game");
-            primaryStage.setScene(menuScene);
-            primaryStage.show();
+        primaryStage.setTitle("Sudoku Game");
+        primaryStage.setScene(menuScene);
+        primaryStage.show();
 
     }
 
