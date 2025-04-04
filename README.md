@@ -1,9 +1,10 @@
 # SudokuFX
 
+[![Latest Release](https://img.shields.io/github/v/release/Math23Kskb/SudokuFX)](https://github.com/Math23Kskb/SudokuFX/releases/latest)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Java Version](https://img.shields.io/badge/Java-17+-blue.svg)](https://www.oracle.com/java/technologies/javase-jdk17-downloads.html)
 
-SudokuFX is a JavaFX-based Sudoku game providing a classic and engaging puzzle experience with a clean user interface and core Sudoku logic.
+SudokuFX is a JavaFX-based Sudoku game providing a classic and engaging puzzle experience with a clean user interface, core Sudoku logic, and built-in error monitoring.
 
 ## Features
 
@@ -14,6 +15,7 @@ SudokuFX is a JavaFX-based Sudoku game providing a classic and engaging puzzle e
     *   A number remover removes numbers from the solved board to create a puzzle, balancing difficulty and solvability.
 *   **Game Over Detection:** Detects when the Sudoku board is completely filled. A "Congratulations!" screen appears upon completion.
 *   **New Game Functionality:** A "Start New Game" button on the "Congratulations!" screen starts a new Sudoku game.
+*   **Error Monitoring & Logging:** Integrated with Sentry for real-time error tracking and Logback for detailed local logging, improving stability and support.
 *   **Unit and System Tests:** Comprehensive unit and system tests ensure the software's core functionalities are robust.
 
 ## Technologies Used
@@ -24,6 +26,8 @@ SudokuFX is a JavaFX-based Sudoku game providing a classic and engaging puzzle e
 *   [JUnit 5](https://junit.org/junit5/) and [Mockito](https://site.mockito.org/) for unit testing
 *   [TestFX](http://testfx.github.io/) for UI testing
 *   [ControlsFX](https://www.controlsfx.org/) for additional UI controls
+*   [Logback](https://logback.qos.ch/) for flexible logging
+*   [Sentry](https://sentry.io/) for real-time error tracking and performance monitoring
 
 ## Installation
 
@@ -31,30 +35,34 @@ There are two primary ways to install and run SudokuFX:
 
 **1. Using the JAR file (Simplest):**
 
-*   Download the `SudokuFX-1.0.0.jar` file from the [Releases Page](https://github.com/[Your GitHub Username]/SudokuFX/releases/tag/v1.0.0) (or the latest release).
+*   Download the `SudokuFX-1.1.0.jar` file from the [Releases Page](https://github.com/Math23Kskb/SudokuFX/releases/latest).
 *   Ensure you have Java 17 or higher installed on your system.
-*   Run the game by double-clicking the JAR file (or using `java -jar SudokuFX-1.0.0.jar` in your command line/terminal).
+*   Run the game by double-clicking the JAR file or using the following command in your terminal/command line:
+    ```bash
+    java -jar SudokuFX-1.1.0.jar
+    ```
 
 **2. Building from Source (For Developers):**
 
 1.  Clone the repository:
     ```bash
-    git clone https://github.com/[Your GitHub Username]/SudokuFX.git
+    git clone https://github.com/Math23Kskb/SudokuFX.git
     cd SudokuFX
     ```
 2.  Build the project using Maven:
     ```bash
     mvn clean install
     ```
-3.  Run the game:
+    *(This will generate `SudokuFX-1.1.0.jar` in the `target/` directory)*
+3.  Run the game using Maven:
     ```bash
     mvn javafx:run
     ```
-    Alternatively, you can find the JAR file in the `target/` directory after building and run it as described in method 1.
+    Alternatively, you can find the JAR file (`SudokuFX-1.1.0.jar`) in the `target/` directory after building and run it as described in method 1 (using `java -jar SudokuFX-1.1.0.jar`).
 
 ## Usage
 
-Simply launch the application. The Sudoku board will appear, and you can start playing by entering numbers into the empty cells.  The game will provide real-time validation of your moves.  When you complete the puzzle, you'll be congratulated!
+Simply launch the application. The Sudoku board will appear, and you can start playing by entering numbers into the empty cells. The game will provide real-time validation of your moves. When you complete the puzzle, you'll be congratulated! Logs will be generated (check Logback configuration for location), and errors will be reported to Sentry if configured.
 
 ## Contributing
 
@@ -74,7 +82,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Known Issues
 
-*   No known issues at this time.  Please report any issues you encounter on the [Issue Tracker](https://github.com/Math23Kskb/SudokuFX/issues).
+*   No known major issues at this time. Please report any issues you encounter on the [Issue Tracker](https://github.com/Math23Kskb/SudokuFX/issues).
 
 ## Future Implementations
 
@@ -86,7 +94,7 @@ We plan to add the following features in future releases:
 *   **Undo/Redo:** Implement undo and redo functionality to allow players to easily revert and reapply moves.
 *   **Save/Load Game:** Enable users to save their progress and load games later.
 *   **Improved UI/UX:** Enhance the user interface and overall user experience with improved styling, animations, and accessibility features.
-*   **More robust error handling:** Add robust error handling for a better user experience.
+*   **More robust error handling:** Continue improving user feedback and recovery for unexpected situations.
 
 ## Credits
 
